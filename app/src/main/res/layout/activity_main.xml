@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="@mipmap/bg"
+    tools:context=".view.page.main.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <ImageView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_help" />
+
+        <ImageView
+            android:id="@+id/list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/title_list"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/device_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/offline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_offline" />
+
+            <com.viseeointernational.battmon.view.custom.RoundCornerImageView
+                android:id="@+id/device_header"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                app:borderColor="@color/theme"
+                app:borderWidth="2dp"
+                app:cornerRadius="20dp" />
+
+            <TextView
+                android:id="@+id/device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/theme"
+                android:textSize="20dp"
+                android:visibility="visible"
+                tools:text="sdfsdfsdf" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/navBar" />
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/voltage"
+            style="@style/RadioButtonMain"
+            android:checked="true"
+            android:drawableTop="@drawable/ic_voltage"
+            android:text="@string/voltage_test" />
+
+        <RadioButton
+            android:id="@+id/cranking"
+            style="@style/RadioButtonMain"
+            android:drawableTop="@drawable/ic_cranking"
+            android:text="@string/cranking_test" />
+
+        <RadioButton
+            android:id="@+id/trip"
+            style="@style/RadioButtonMain"
+            android:drawableTop="@drawable/ic_trip"
+            android:text="@string/trip" />
+
+        <RadioButton
+            android:id="@+id/setup"
+            style="@style/RadioButtonMain"
+            android:drawableTop="@drawable/ic_setup"
+            android:text="@string/setup" />
+
+        <RadioButton
+            android:id="@+id/list"
+            style="@style/RadioButtonMain"
+            android:drawableTop="@drawable/ic_list"
+            android:text="@string/list" />
+
+    </RadioGroup>
+
+</LinearLayout>

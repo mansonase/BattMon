@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme">#00FCFF</color>
+    <color name="red">#f00</color>
+
+    <color name="navBar">#757575</color>
+    <color name="transparency30">#22000000</color>
+    <color name="text">#FFFFFF</color>
+    <color name="button_green">#25747D</color>
+    <color name="button_red">#FF0000</color>
+    <color name="cranking_line">#C80000</color>
+    <color name="textTeach">#FCB4B4</color>
+
+    <color name="textDark">#8F8E94</color>
+
+    <color name="stateRed">#F95858</color>
+    <color name="stateYellow">#FFB600</color>
+
+    <color name="dialogButton">#007AFF</color>
+
+    <color name="hint">#D6D6D6</color>
+
+    <color name="pickerTitle">#1D1D1D</color>
+    <color name="gray">#363A46</color>
+</resources>

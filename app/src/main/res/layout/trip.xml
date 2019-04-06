@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/show_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start : "
+            android:textColor="@android:color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tv_1"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            tools:text="19:00" />
+
+        <TextView
+            android:id="@+id/tv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_1"
+            android:text="End : "
+            android:textColor="@android:color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_2"
+            android:layout_toEndOf="@id/tv_2"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            tools:text="19:00" />
+
+        <TextView
+            android:id="@+id/tv_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_2"
+            android:text="Duration : "
+            android:textColor="@android:color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_3"
+            android:layout_toEndOf="@id/tv_3"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            tools:text="19 min" />
+
+        <ImageView
+            android:id="@+id/arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_enter" />
+
+        <ImageView
+            android:id="@+id/arrow_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_enter_down" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/white" />
+
+    <LinearLayout
+        android:id="@+id/detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_voltage" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <com.viseeointernational.battmon.view.custom.FlashView
+                    android:id="@+id/flash_voltage"
+                    android:layout_width="200dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    app:breathe="false"
+                    app:flashColor="@android:color/transparent" />
+
+                <TextView
+                    android:id="@+id/state_voltage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="--"
+                    android:textColor="@color/theme"
+                    android:textSize="14dp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/value_voltage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                tools:text="12.50v" />
+
+            <ImageView
+                android:id="@+id/graph_voltage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_graph" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_cranking" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <com.viseeointernational.battmon.view.custom.FlashView
+                    android:id="@+id/flash_cranking"
+                    android:layout_width="200dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    app:breathe="false"
+                    app:flashColor="@android:color/transparent" />
+
+                <TextView
+                    android:id="@+id/state_cranking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="--"
+                    android:textColor="@color/theme"
+                    android:textSize="14dp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/value_cranking"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                tools:text="12.50v" />
+
+            <ImageView
+                android:id="@+id/graph_cranking"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_graph" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_charging" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <com.viseeointernational.battmon.view.custom.FlashView
+                    android:id="@+id/flash_charging"
+                    android:layout_width="200dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    app:breathe="false"
+                    app:flashColor="@android:color/transparent" />
+
+                <TextView
+                    android:id="@+id/state_charging"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="--"
+                    android:textColor="@color/theme"
+                    android:textSize="14dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

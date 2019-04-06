@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@mipmap/bg" />
+
+    <item
+        android:drawable="@mipmap/ic_logo_bm1"
+        android:gravity="center" />
+
+    <item
+        android:drawable="@mipmap/ic_logo_viseeo"
+        android:bottom="20dp"
+        android:gravity="center_horizontal|bottom" />
+</layer-list>

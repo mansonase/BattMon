@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_corners_top"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Camera"
+        android:textColor="@color/dialogButton"
+        android:textSize="18dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/navBar" />
+
+    <TextView
+        android:id="@+id/select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Select photo"
+        android:textColor="@color/dialogButton"
+        android:textSize="18dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/navBar" />
+
+    <TextView
+        android:id="@+id/delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_corners_bottom"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Delete"
+        android:textColor="@color/red"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Cancel"
+        android:textColor="@color/dialogButton"
+        android:textSize="18dp" />
+</LinearLayout>

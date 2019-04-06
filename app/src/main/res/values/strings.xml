@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">BattMon</string>
+
+    <string name="msg_ble_not_supported">BLE not supported!</string>
+    <string name="msg_no_bluetooth_adapter">found no bluetooth adapter!</string>
+    <string name="msg_permissions_not_allowed">Permissions not allowed!</string>
+    <string name="msg_time_out">Time out!</string>
+    <string name="msg_ble_not_enable">Bluetooth not enable!</string>
+    <string name="msg_device_offline">Device offline!</string>
+    <string name="msg_device_not_available">Device not available!</string>
+    <string name="msg_already_reset">Already reset!</string>
+    <string name="msg_successful">Successful!</string>
+    <string name="msg_failed">Failed!</string>
+    <string name="msg_exit">Click again to exit!</string>
+
+    <string name="dialog_add_reconnect">Can not connect with STOP AT-1! Would you like to retry?</string>
+
+    <string name="channel_ble_service">BLE service</string>
+
+    <string name="waiting">Waiting&#8230;&#8230;&#8230;</string>
+
+    <string name="device_all">All</string>
+    <string name="voltage_test">Voltage Test</string>
+    <string name="cranking_test">Cranking Test</string>
+    <string name="list">List</string>
+    <string name="trip">Trip</string>
+    <string name="setup">Setup</string>
+
+    <string name="running">Running&#8230;&#8230;&#8230;</string>
+
+    <string name="how_to_use">How to use</string>
+    <string name="get_started">Get Started</string>
+    <string name="rescan">Rescan</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="standard_range">Standard Range</string>
+    <string name="standard_range_2">Standard\nRange</string>
+    <string name="charging_voltage_in">Charging Voltage in </string>
+    <string name="idle_speed">Idle Speed</string>
+    <string name="high_rpm">High RPM</string>
+    <string name="charging_warning">The internal voltage regulator in the powertrain control module may\nneed to be replaced.</string>
+
+    <string name="content_connect">Please turn on bluetooth and make sure the device is installed in the car.</string>
+
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connecting">Connecting</string>
+
+    <string name="bluetooth">Bluetooth</string>
+
+    <string name="voltage">Voltage</string>
+
+    <string name="good">Battery is Good</string>
+
+    <string name="qa">Q&#38;A</string>
+
+    <string name="teach_1">Car voltage&lt;12.3v indicates poor battery condition.</string>
+    <string name="teach_2">Cranking Voltage&lt;8.5v indicates poor battery condition(This value will vary depending on the type of battery in each car).</string>
+</resources>

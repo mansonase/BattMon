@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+
+    <!--<external-path-->
+        <!--name="pictures"-->
+        <!--path="Pictures"/>-->
+
+    <external-path
+        name="images"
+        path="ViseeO/BattMon/Header"/>
+
+</paths>

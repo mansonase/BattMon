@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/black"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/pickerTitle"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/theme"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Power-off after"
+            android:textColor="@android:color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Done"
+            android:textColor="@color/theme"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+    <cn.forward.androids.views.StringScrollPicker
+        android:id="@+id/picker"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_marginTop="20dp"
+        app:spv_center_item_background="@drawable/bg_picker_center_item"
+        app:spv_disallow_intercept_touch="true"
+        app:spv_is_circulation="false"
+        app:spv_max_text_size="18dp"
+        app:spv_min_text_size="14dp"
+        app:spv_center_item_position="2"
+        app:spv_start_color="@android:color/white"
+        app:spv_end_color="@android:color/darker_gray"
+        app:spv_visible_item_count="6" />
+
+
+</LinearLayout>

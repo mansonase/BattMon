@@ -1,0 +1,67 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">false</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:fitsSystemWindows">true</item>-->
+        <item name="colorAccent">@color/theme</item>
+        <item name="android:windowBackground">@mipmap/bg</item>
+    </style>
+
+    <style name="AppThemeSplash" parent="AppTheme">
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+
+    <style name="RadioButtonMain">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textColor">@color/text_checked_white_to_theme</item>
+        <item name="android:textSize">10dp</item>
+    </style>
+
+    <style name="DialogBase">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.8</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="DialogBottom" parent="DialogBase">
+        <item name="android:windowAnimationStyle">@style/BottomInOut</item>
+    </style>
+
+    <style name="BottomInOut">
+        <item name="android:windowEnterAnimation">@anim/bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/bottom_out</item>
+    </style>
+
+    <style name="RadioButtonVoltage">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/text_checked_white_to_black</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="EditTextMain" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/theme</item>
+    </style>
+
+</resources>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@drawable/bg_item_list"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        tools:text="Abnormal Cranking" />
+
+    <ImageView
+        android:id="@+id/sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_sub" />
+
+    <EditText
+        android:id="@+id/value"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        android:theme="@style/EditTextMain"
+        tools:text="15770" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="v"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_add" />
+
+    <TextView
+        android:id="@+id/default_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="Default"
+        android:textColor="@color/theme"
+        android:textSize="14dp" />
+
+</LinearLayout>

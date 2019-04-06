@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/bg_item_list"
+        android:padding="15dp">
+
+        <com.viseeointernational.battmon.view.custom.RoundCornerImageView
+            android:id="@+id/device_header"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            app:borderColor="@color/theme"
+            app:borderWidth="2dp"
+            app:cornerRadius="30dp" />
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_edit" />
+
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/edit"
+            android:layout_toEndOf="@id/device_header"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:singleLine="true"
+            android:textColor="@color/theme"
+            android:textSize="20dp"
+            tools:text="ssssss" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/edit"
+            android:layout_toEndOf="@id/device_header"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <com.viseeointernational.battmon.view.custom.FlashView
+                    android:id="@+id/flash"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    app:breathe="true"
+                    app:flashColor="@color/theme" />
+
+                <TextView
+                    android:id="@+id/state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/good"
+                    android:textColor="@color/theme"
+                    android:textSize="14dp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/voltage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                tools:text="1212v" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+</LinearLayout>
