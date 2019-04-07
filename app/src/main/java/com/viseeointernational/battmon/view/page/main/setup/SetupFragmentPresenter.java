@@ -116,11 +116,11 @@ public class SetupFragmentPresenter implements SetupFragmentContract.Presenter {
         }
     }
 
-    private Disposable disposable;
+    private Disposable delayDisposable;
 
     private void startDelayTimer() {
         stopDelayTimer();
-        disposable = Observable.interval(0, 1, TimeUnit.MINUTES)
+        delayDisposable = Observable.interval(0, 1, TimeUnit.MINUTES)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
@@ -130,7 +130,7 @@ public class SetupFragmentPresenter implements SetupFragmentContract.Presenter {
                             return;
                         }
                         Device device = deviceSource.getDevice(address);
-                        if (device == null) {
+                        if (device == null || view == null) {
                             return;
                         }
                         if (device.usbPowerOffDelayTime == -1) {
@@ -162,9 +162,9 @@ public class SetupFragmentPresenter implements SetupFragmentContract.Presenter {
     }
 
     private void stopDelayTimer() {
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-            disposable = null;
+        if (delayDisposable != null && !delayDisposable.isDisposed()) {
+            delayDisposable.dispose();
+            delayDisposable = null;
         }
     }
 

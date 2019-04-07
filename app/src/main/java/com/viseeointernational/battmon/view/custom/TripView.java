@@ -123,16 +123,19 @@ public class TripView extends LinearLayout {
                 stateVoltage.setText("Battery is Dying");
                 stateVoltage.setTextColor(getResources().getColor(R.color.stateRed));
                 flashVoltage.setColor(getResources().getColor(R.color.stateRed));
+                valueVoltage.setTextColor(getResources().getColor(R.color.stateRed));
                 break;
             case StateType.VOLTAGE_LOW:
                 stateVoltage.setText("Battery is Low");
                 stateVoltage.setTextColor(getResources().getColor(R.color.stateYellow));
                 flashVoltage.setColor(getResources().getColor(R.color.stateYellow));
+                valueVoltage.setTextColor(getResources().getColor(R.color.stateYellow));
                 break;
             case StateType.VOLTAGE_GOOD:
                 stateVoltage.setText("Battery is Good");
                 stateVoltage.setTextColor(getResources().getColor(R.color.theme));
                 flashVoltage.setColor(getResources().getColor(R.color.theme));
+                valueVoltage.setTextColor(Color.WHITE);
                 break;
         }
     }
@@ -148,16 +151,19 @@ public class TripView extends LinearLayout {
                 stateCranking.setText("Cranking is Bad");
                 stateCranking.setTextColor(getResources().getColor(R.color.stateRed));
                 flashCranking.setColor(getResources().getColor(R.color.stateRed));
+                valueCranking.setTextColor(getResources().getColor(R.color.stateRed));
                 break;
             case StateType.CRANKING_LOW:
                 stateCranking.setText("Cranking is Low");
                 stateCranking.setTextColor(getResources().getColor(R.color.stateYellow));
                 flashCranking.setColor(getResources().getColor(R.color.stateYellow));
+                valueCranking.setTextColor(getResources().getColor(R.color.stateYellow));
                 break;
             case StateType.CRANKING_GOOD:
                 stateCranking.setText("Cranking is Good");
                 stateCranking.setTextColor(getResources().getColor(R.color.theme));
                 flashCranking.setColor(getResources().getColor(R.color.theme));
+                valueCranking.setTextColor(Color.WHITE);
                 break;
         }
     }

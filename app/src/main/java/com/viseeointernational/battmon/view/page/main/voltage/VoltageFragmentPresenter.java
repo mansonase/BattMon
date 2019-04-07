@@ -11,6 +11,7 @@ import com.viseeointernational.battmon.data.constant.StateType;
 import com.viseeointernational.battmon.data.entity.Device;
 import com.viseeointernational.battmon.data.entity.Voltage;
 import com.viseeointernational.battmon.data.source.device.DeviceSource;
+import com.viseeointernational.battmon.util.MathUtil;
 import com.viseeointernational.battmon.util.TimeUtil;
 import com.viseeointernational.battmon.util.ValueUtil;
 import com.viseeointernational.battmon.view.page.connect.ConnectActivity;
@@ -19,6 +20,7 @@ import com.viseeointernational.battmon.view.page.main.LongTimeChartType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -81,7 +83,7 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
                 if (voltage.address.equals(address)) {
                     if (chartFrom <= voltage.time && voltage.time < chartTo) {
                         tempChartData.add(voltage);
-                        makeChart(tempChartData, chartFrom, chartTo, 0);
+                        makeVoltageChart(tempChartData, chartFrom, chartTo, -1);
                     }
                     showVoltage(voltage);
                 }
@@ -229,7 +231,7 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
                     public void onNext(List<Voltage> voltages) {
                         tempChartData.clear();
                         tempChartData.addAll(voltages);
-                        makeChart(voltages, chartFrom, chartTo, now);
+                        makeVoltageChart(voltages, chartFrom, chartTo, now);
                     }
 
                     @Override
@@ -246,33 +248,56 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
                 });
     }
 
-    private void makeChart(final List<Voltage> voltages, final long from, long to, long now) {
-        final long interval = 60000;
+    private void makeVoltageChart(final List<Voltage> voltages, final long from, long to, long now) {
         final int position;
-        if (now != 0) {
-            position = (int) ((to - from) / interval);
-        } else {
+        if (now == -1) {
             position = -1;
+        } else {
+            if (from <= now && now < to) {
+                position = (int) ((now - from) / 10000);
+            } else {
+                position = -1;
+            }
         }
-        final int size = (int) ((to - from) / interval);
+
+        final int size = (int) ((to - from) / 10000) + 1;
         Observable.just(1)
                 .map(new Function<Integer, List<Entry>>() {
                     @Override
                     public List<Entry> apply(Integer integer) throws Exception {
-                        List<Entry> data = new ArrayList<>();
+                        List<Entry> ret = new ArrayList<>();
+                        Collections.reverse(voltages);
                         for (int i = 0; i < size; i++) {
-                            Voltage temp = null;
-                            for (int j = 0; j < voltages.size(); j++) {
+                            long entryFrom = from + i * 10000L;
+                            long entryTo = from + (i + 1) * 10000L;
+                            List<Float> floats = new ArrayList<>();
+                            for (int j = voltages.size() - 1; j >= 0; j--) {
                                 Voltage voltage = voltages.get(j);
-                                if (from + i * interval <= voltage.time && voltage.time < from + (i + 1) * interval) {
-                                    temp = voltage;
+                                if (entryFrom <= voltage.time && voltage.time < entryTo) {
+                                    floats.add(voltage.value);
+                                    voltages.remove(j);
                                 }
                             }
-                            String xAxis = TimeUtil.getFormatTime(from + i * interval, "HH:mm");
-                            Entry entry = new Entry(i, temp == null ? 0 : temp.value, xAxis);
-                            data.add(entry);
+                            Entry entry;
+                            if (floats.size() == 0) {
+                                if (ret.size() == 0) {
+                                    entry = new Entry(i, 0, TimeUtil.getFormatTime(entryFrom, "HH:mm"));
+                                } else {
+                                    Entry lastEntry = ret.get(ret.size() - 1);
+                                    entry = new Entry(i, lastEntry.getY(), TimeUtil.getFormatTime(entryFrom, "HH:mm"));
+                                }
+                            } else {
+                                float value = 0;
+                                for (int j = 0; j < floats.size(); j++) {
+                                    value += floats.get(j);
+                                }
+                                value = value / floats.size();
+                                value = MathUtil.formatFloat2(value);
+                                entry = new Entry(i, value, TimeUtil.getFormatTime(entryFrom, "HH:mm"));
+                            }
+                            ret.add(entry);
                         }
-                        return data;
+                        return ret;
                     }
                 })
                 .subscribeOn(Schedulers.computation())
@@ -280,7 +305,6 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
                 .subscribe(new Observer<List<Entry>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
@@ -300,7 +324,6 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
     }
@@ -473,7 +496,6 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
     }

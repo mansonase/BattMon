@@ -5,8 +5,13 @@ import java.math.RoundingMode;
 
 public class MathUtil {
 
-    public static float formatDouble2(double d) {
-        BigDecimal bigDecimal = new BigDecimal(d).setScale(2, RoundingMode.UP);
+    public static float formatFloat2(float f) {
+        BigDecimal bigDecimal = new BigDecimal(f).setScale(2, RoundingMode.HALF_UP);
+        return bigDecimal.floatValue();
+    }
+
+    public static float formatFloat1(float f) {
+        BigDecimal bigDecimal = new BigDecimal(f).setScale(1, RoundingMode.HALF_UP);
         return bigDecimal.floatValue();
     }
 }

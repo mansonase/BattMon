@@ -80,20 +80,18 @@ public class SetupFragment extends BaseFragment implements SetupFragmentContract
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_setup, container, false);
         unbinder = ButterKnife.bind(this, root);
-
-        init();
-        presenter.takeView(this);
         return root;
     }
 
     @Override
     public void onDestroyView() {
-        presenter.dropView();
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    private void init() {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         abnormalNotification.setOnCheckedChangeListener(onCheckedChangeListener);
         usbPowerOff.setOnCheckedChangeListener(onCheckedChangeListener);
         advanced.setOnCheckedChangeListener(onCheckedChangeListener);
@@ -104,6 +102,18 @@ public class SetupFragment extends BaseFragment implements SetupFragmentContract
         engineStop.setOnValueChangeListener(onValueChangeListener);
         crankingStart.setOnValueChangeListener(onValueChangeListener);
         abnormalCranking.setOnValueChangeListener(onValueChangeListener);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.takeView(this);
+    }
+
+    @Override
+    public void onPause() {
+        presenter.dropView();
+        super.onPause();
     }
 
     private ValueView.OnValueChangeListener onValueChangeListener = new ValueView.OnValueChangeListener() {

@@ -1,6 +1,7 @@
 package com.viseeointernational.battmon.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -147,36 +148,41 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.content.setOnClickListener(onClickListener);
         holder.edit.setTag(position);
         holder.edit.setOnClickListener(onClickListener);
-        holder.voltage.setText(device.voltage + "v");
+        holder.voltage.setText(device.voltage.value + "v");
         switch (device.voltage.state){
             case StateType.VOLTAGE_DYING:
                 holder.state.setText("Battery is Dying");
                 holder.state.setTextColor(context.getResources().getColor(R.color.stateRed));
                 holder.flash.setColor(context.getResources().getColor(R.color.stateRed));
+                holder.voltage.setTextColor(context.getResources().getColor(R.color.stateRed));
                 holder.flash.enableBreathe(false);
                 break;
             case StateType.VOLTAGE_LOW:
                 holder.state.setText("Battery is Low");
                 holder.state.setTextColor(context.getResources().getColor(R.color.stateYellow));
                 holder.flash.setColor(context.getResources().getColor(R.color.stateYellow));
+                holder.voltage.setTextColor(context.getResources().getColor(R.color.stateYellow));
                 holder.flash.enableBreathe(false);
                 break;
             case StateType.VOLTAGE_GOOD:
                 holder.state.setText("Battery is Good");
                 holder.state.setTextColor(context.getResources().getColor(R.color.theme));
                 holder.flash.setColor(context.getResources().getColor(R.color.theme));
+                holder.voltage.setTextColor(Color.WHITE);
                 holder.flash.enableBreathe(false);
                 break;
             case StateType.CHARGING:
                 holder.state.setText("Charging");
                 holder.state.setTextColor(context.getResources().getColor(R.color.theme));
                 holder.flash.setColor(context.getResources().getColor(R.color.theme));
+                holder.voltage.setTextColor(Color.WHITE);
                 holder.flash.enableBreathe(true);
                 break;
             case StateType.OVER_CHARGING:
                 holder.state.setText("Over Charging");
                 holder.state.setTextColor(context.getResources().getColor(R.color.stateRed));
                 holder.flash.setColor(context.getResources().getColor(R.color.stateRed));
+                holder.voltage.setTextColor(context.getResources().getColor(R.color.stateRed));
                 holder.flash.enableBreathe(true);
                 break;
         }

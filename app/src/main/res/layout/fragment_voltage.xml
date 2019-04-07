@@ -46,17 +46,17 @@
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            app:breathe="true"
-            app:flashColor="@color/theme" />
+            app:breathe="false"
+            app:flashColor="@android:color/transparent" />
 
         <TextView
             android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            tools:text="@string/good"
             android:textColor="@color/theme"
-            android:textSize="30dp" />
+            android:textSize="30dp"
+            tools:text="@string/good" />
 
     </RelativeLayout>
 

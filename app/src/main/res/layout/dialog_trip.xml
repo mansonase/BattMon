@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="350dp"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:text="Start"
                 android:textColor="@android:color/white"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                 android:layout_marginStart="20dp"
                 android:text="Engine Start Time"
                 android:textColor="@android:color/white"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 
@@ -65,7 +65,7 @@
                 android:gravity="center"
                 android:text="End"
                 android:textColor="@android:color/white"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:layout_marginStart="20dp"
                 android:text="Engine Stop Time"
                 android:textColor="@android:color/white"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 
@@ -95,7 +95,7 @@
                 android:layout_marginStart="20dp"
                 android:text="Shows single trip/cranking graph"
                 android:textColor="@android:color/white"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 

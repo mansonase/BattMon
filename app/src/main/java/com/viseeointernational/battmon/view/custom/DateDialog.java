@@ -43,7 +43,7 @@ public class DateDialog extends Dialog {
     private int month;
 
     public DateDialog(@NonNull Context context, @NonNull Callback callback) {
-        super(context, R.style.DialogBase);
+        super(context, R.style.DialogTeach);
         this.context = context;
         this.callback = callback;
     }
@@ -76,7 +76,7 @@ public class DateDialog extends Dialog {
     }
 
     private void setYearAndMonth(int year, int month) {
-        title.setText(year + "  " + TimeUtil.getEnglishMonthAbbr(month));
+        title.setText(year + " " + TimeUtil.getEnglishMonthAbbr(month));
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, 1);
         int datas[][] = new int[6][7];

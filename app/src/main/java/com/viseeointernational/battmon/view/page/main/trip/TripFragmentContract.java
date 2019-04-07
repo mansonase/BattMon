@@ -17,9 +17,9 @@ public interface TripFragmentContract {
 
         void showCalendar(int year, int month, List<Integer> markedDays);
 
-        void showVoltageGraph(String title, List<Entry> list, int position);
+        void showVoltageGraph(int icon, String title, List<Entry> list, int position);
 
-        void showCrankingGraph(String title, List<Entry> list, int position);
+        void showCrankingGraph(int icon, String title, List<Entry> list, int position);
     }
 
     interface Presenter extends BasePresenter<View> {

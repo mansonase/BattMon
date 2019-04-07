@@ -22,7 +22,7 @@ public class AbnormalChargingDialog extends AppCompatDialog {
     private AbnormalChargingAdapter adapter;
 
     public AbnormalChargingDialog(Context context) {
-        super(context, R.style.DialogBase);
+        super(context, R.style.DialogTeach);
     }
 
     @Override

@@ -83,7 +83,8 @@ public class ChartView extends LineChart {
         rightAxis.setEnabled(false);
         setDoubleTapToZoomEnabled(false);
         setPinchZoom(false);
-        setVisibleXRange(30, 30);
+        setScaleXEnabled(true);
+        setScaleYEnabled(false);
     }
 
     private List<Entry> list = new ArrayList<>();
@@ -103,7 +104,7 @@ public class ChartView extends LineChart {
             lineDataSet.setColor(getResources().getColor(R.color.theme));
             lineDataSet.setDrawCircleHole(false);
             lineDataSet.setDrawCircles(false);
-            lineDataSet.setLineWidth(4);
+            lineDataSet.setLineWidth(1);
             LineData lineData = new LineData(lineDataSet);
             lineData.setDrawValues(false);
             setData(lineData);
@@ -111,6 +112,7 @@ public class ChartView extends LineChart {
         if (position != -1) {
             zoom(1, 1, position, 1, YAxis.AxisDependency.LEFT);
         }
+        setVisibleXRange(30, 30);
     }
 
 }

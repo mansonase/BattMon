@@ -223,7 +223,7 @@ public class DeviceRepository implements DeviceSource {
         List<Cranking> crankings = crankingDao.getCrankings(address, from, to);
         for (int i = 0; i < crankings.size(); i++) {
             Cranking cranking = crankings.get(i);
-            cranking.value = crankingValueDao.getCrankingValues(address, cranking.startTime);
+            cranking.crankingValues = crankingValueDao.getCrankingValues(address, cranking.startTime);
         }
         return crankings;
     }
@@ -236,8 +236,19 @@ public class DeviceRepository implements DeviceSource {
             trip.voltage = voltageDao.getLashVoltageByState(address, trip.startTime, trip.endTime,
                     StateType.VOLTAGE_DYING, StateType.VOLTAGE_LOW, StateType.VOLTAGE_GOOD);
             trip.cranking = crankingDao.getLashCrankingByTime(address, trip.startTime, trip.endTime);
+            if (trip.cranking != null) {
+                trip.cranking.crankingValues = crankingValueDao.getCrankingValues(address, trip.cranking.startTime);
+            }
             trip.charging = voltageDao.getLashVoltageByState(address, trip.startTime, trip.endTime,
                     StateType.CHARGING, StateType.OVER_CHARGING);
+        }
+        if (pairedDevices.containsKey(address)) {
+            Device device = pairedDevices.get(address);
+            if (device != null && device.trip != null) {
+                if (from <= device.trip.startTime) {
+                    trips.add(device.trip);
+                }
+            }
         }
         return trips;
     }
@@ -753,12 +764,41 @@ public class DeviceRepository implements DeviceSource {
 
     private void handleGattDisconnected(String address) {
         if (pairedDevices.containsKey(address)) {
-            Device device = pairedDevices.get(address);
+            final Device device = pairedDevices.get(address);
             if (device != null) {
                 if (device.connectionState == ConnectionType.CONNECTED) {
                     // todo 播通知
                 }
                 device.connectionState = ConnectionType.DISCONNECTED;
+                if (device.trip == null) {
+                    return;
+                }
+                Observable.just(1)
+                        .doOnNext(new Consumer<Integer>() {
+                            @Override
+                            public void accept(Integer integer) throws Exception {
+                                device.trip.endTime = Calendar.getInstance().getTimeInMillis();
+                                tripDao.insert(device.trip);
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Observer<Integer>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                            }
+
+                            @Override
+                            public void onNext(Integer integer) {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+
+                            @Override
+                            public void onComplete() {
+                            }
+                        });
             }
         }
     }
@@ -793,6 +833,8 @@ public class DeviceRepository implements DeviceSource {
         if (pairedDevices.containsKey(address)) {// 自动重连情况
             Device device = pairedDevices.get(address);
             if (device != null) {
+                device.trip = new Trip(address);
+                device.trip.startTime = Calendar.getInstance().getTimeInMillis();
                 device.isReady = false;
                 device.connectionState = ConnectionType.CONNECTED;
                 bleService.write(address, new byte[]{(byte) 0xa0});// 发A0拿历史数据
@@ -818,6 +860,8 @@ public class DeviceRepository implements DeviceSource {
                         device.pairId = StringUtil.bytes2HexStringEx(pairIds);
                         device.pairedTime = Calendar.getInstance().getTimeInMillis();
                         device.connectionState = ConnectionType.CONNECTED;
+                        device.trip = new Trip(address);
+                        device.trip.startTime = Calendar.getInstance().getTimeInMillis();
                         device.isReady = true;
                         deviceDao.insert(device);
                         bleService.write(address, new byte[]{(byte) 0xf0, device.calH, device.calL});
@@ -882,7 +926,7 @@ public class DeviceRepository implements DeviceSource {
                 Voltage voltage = new Voltage(address);
                 voltage.time = now;
                 float value = ValueUtil.getRealVoltage(data[4], data[5], data[9], data[10]);
-                value = MathUtil.formatDouble2(value);
+                value = MathUtil.formatFloat2(value);
                 voltage.value = value;
                 voltage.indexH = data[6];
                 voltage.indexL = data[7];
@@ -919,6 +963,19 @@ public class DeviceRepository implements DeviceSource {
                         Device device = pairedDevices.get(address);
                         if (device != null) {
                             device.voltage = voltage;
+                            if (device.trip != null) {
+                                switch (voltage.state) {
+                                    case StateType.VOLTAGE_DYING:
+                                    case StateType.VOLTAGE_LOW:
+                                    case StateType.VOLTAGE_GOOD:
+                                        device.trip.voltage = voltage;
+                                        break;
+                                    case StateType.CHARGING:
+                                    case StateType.OVER_CHARGING:
+                                        device.trip.charging = voltage;
+                                        break;
+                                }
+                            }
                         }
                         handleVoltageChangeListen(voltage);
                     }
@@ -960,6 +1017,7 @@ public class DeviceRepository implements DeviceSource {
         if (((state >> 3) & 0x01) == 1) {
             // abnormal cranking
         }
+        bleService.write(address, new byte[]{(byte) 0xa3});
     }
 
     /************************************************处理A0*************************************************/
@@ -1097,14 +1155,14 @@ public class DeviceRepository implements DeviceSource {
                             Cranking cranking = new Cranking(device.address);
                             cranking.startTime = device.crankingDataSet.getStartTime();
                             List<Float> values = device.crankingDataSet.getReceivedData();
-                            cranking.value = new ArrayList<>();
+                            cranking.crankingValues = new ArrayList<>();
                             for (int i = 0; i < values.size(); i++) {
                                 float f = values.get(i);
-                                f = MathUtil.formatDouble2(f);
+                                f = MathUtil.formatFloat2(f);
                                 CrankingValue value = new CrankingValue(device.address);
                                 value.startTime = cranking.startTime;
                                 value.value = f;
-                                cranking.value.add(value);
+                                cranking.crankingValues.add(value);
                                 if (f < cranking.minValue) {
                                     cranking.minValue = f;
                                 }
@@ -1120,7 +1178,7 @@ public class DeviceRepository implements DeviceSource {
                                 cranking.state = StateType.CRANKING_GOOD;
                             }
                             crankingDao.insert(cranking);
-                            crankingValueDao.insert(cranking.value);
+                            crankingValueDao.insert(cranking.crankingValues);
                             device.crankingDataSet = null;
                             return cranking;
                         }
@@ -1144,8 +1202,10 @@ public class DeviceRepository implements DeviceSource {
                     @Override
                     public void onNext(Cranking cranking) {
                         device.cranking = cranking;
+                        if (device.trip != null) {
+                            device.trip.cranking = cranking;
+                        }
                         handleCrankingChangeListen(cranking);
-                        bleService.write(device.address, new byte[]{(byte) 0xa3});
                     }
 
                     @Override

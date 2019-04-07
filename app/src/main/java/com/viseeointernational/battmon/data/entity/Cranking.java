@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,5 +23,15 @@ public class Cranking {
     }
 
     @Ignore
-    public List<CrankingValue> value;
+    public List<CrankingValue> crankingValues;
+
+    public List<Float> getFloatValues() {
+        List<Float> ret = new ArrayList<>();
+        if (crankingValues != null) {
+            for (int i = 0; i < crankingValues.size(); i++) {
+                ret.add(crankingValues.get(i).value);
+            }
+        }
+        return ret;
+    }
 }

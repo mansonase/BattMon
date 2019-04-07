@@ -1,6 +1,7 @@
 package com.viseeointernational.battmon.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimeUtil {
@@ -98,5 +99,53 @@ public class TimeUtil {
                 return "Dec.";
         }
         return "";
+    }
+
+    public static String getDayTh(int day) {
+        switch (day) {
+            case 1:
+                return "1st";
+            case 2:
+                return "2nd";
+            default:
+                return day + "th";
+        }
+    }
+
+    public static String getNormalDate(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return getEnglishMonthAbbr(month) + " " + getDayTh(day) + " " + year;
+    }
+
+    public static String getNormalDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        int y = calendar.get(Calendar.YEAR);
+        int m = calendar.get(Calendar.MONTH);
+        int d = calendar.get(Calendar.DAY_OF_MONTH);
+        return getEnglishMonthAbbr(m) + " " + getDayTh(d) + " " + y;
+    }
+
+    public static String getNormalDateEx(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        String shour = hour + "";
+        if (shour.length() == 1) {
+            shour = "0" + shour;
+        }
+        String sminute = minute + "";
+        if (sminute.length() == 1) {
+            sminute = "0" + sminute;
+        }
+        return year + " " + getEnglishMonthAbbr(month) + " " + getDayTh(day) + " " + shour + ":" + sminute;
     }
 }

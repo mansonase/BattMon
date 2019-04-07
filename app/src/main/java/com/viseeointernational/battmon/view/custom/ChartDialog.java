@@ -3,6 +3,7 @@ package com.viseeointernational.battmon.view.custom;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialog;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.data.Entry;
@@ -19,9 +20,11 @@ public class ChartDialog extends AppCompatDialog {
     TextView title;
     @BindView(R.id.chart)
     ChartView chart;
+    @BindView(R.id.icon)
+    ImageView icon;
 
     public ChartDialog(Context context) {
-        super(context, R.style.DialogBase);
+        super(context, R.style.DialogTeach);
     }
 
     @Override
@@ -29,10 +32,13 @@ public class ChartDialog extends AppCompatDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_chart);
         ButterKnife.bind(this);
+
+        setCanceledOnTouchOutside(true);
     }
 
-    public void show(String title, List<Entry> data, int position) {
+    public void show(int icon, String title, List<Entry> data, int position) {
         super.show();
+        this.icon.setImageResource(icon);
         this.title.setText(title);
         chart.setData(data, position);
     }

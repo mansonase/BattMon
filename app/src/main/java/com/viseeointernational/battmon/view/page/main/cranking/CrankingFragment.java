@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.data.Entry;
 import com.viseeointernational.battmon.R;
 import com.viseeointernational.battmon.view.custom.ChartView;
 import com.viseeointernational.battmon.view.custom.CrankingDialog;
@@ -181,6 +182,31 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
         voltage.setLevels(start, abnormalCranking, yellow, crankingStart);
     }
 
+    @Override
+    public void showChart(List<Entry> data, int position) {
+        chart.setData(data, position);
+    }
+
+    @Override
+    public void showYear(String s) {
+        year.setText(s);
+    }
+
+    @Override
+    public void showLongTimeChart(List<Entry> data, int position, float red, float yellow, float blue) {
+        longTimeChart.setData(data, position, red, yellow, blue);
+    }
+
+    @Override
+    public void showPreviousItem(String s) {
+        previousDate.setText(s);
+    }
+
+    @Override
+    public void showNextItem(String s) {
+        nextDate.setText(s);
+    }
+
     @OnClick({R.id.teach, R.id.changer, R.id.previous_item, R.id.previous_date, R.id.next_date, R.id.next_item, R.id.previous_year, R.id.next_year})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -210,8 +236,10 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
 
                 break;
             case R.id.previous_year:
+                presenter.previousYear();
                 break;
             case R.id.next_year:
+                presenter.nextYear();
                 break;
         }
     }

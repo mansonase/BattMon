@@ -6,11 +6,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.viseeointernational.battmon.R;
 import com.viseeointernational.battmon.data.entity.Device;
+import com.viseeointernational.battmon.data.entity.Voltage;
 import com.viseeointernational.battmon.data.source.device.DeviceSource;
 import com.viseeointernational.battmon.data.source.file.FileSource;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -190,45 +193,61 @@ public class ListFragmentPresenter implements ListFragmentContract.Presenter {
     }
 
     @Override
-    public void delete() {
-        Observable.just(1)
-                .doOnNext(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        deviceSource.delete(device.address);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        if (view != null) {
-                            view.showLoading();
-                        }
-                    }
+    public void delete(@NonNull Device device) {
+        if (view != null) {
+            view.showLoading();
+        }
+        deviceSource.unpair(device.address, true, new DeviceSource.BleCallback() {
+            @Override
+            public void onFailed() {
+                if (view != null) {
+                    view.cancelLoading();
+                    view.showMessage(R.string.msg_failed);
+                }
+            }
 
-                    @Override
-                    public void onNext(Integer integer) {
-                        if (view != null) {
-                            view.cancelLoading();
-                            view.clearEdit();
-                            getDevices(input);
-                        }
-                    }
+            @Override
+            public void onSuccessful() {
+                if (view != null) {
+                    view.cancelLoading();
+                    view.showMessage(R.string.msg_successful);
+                    view.clearEdit();
+                    getDevices(input);
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (view != null) {
-                            view.cancelLoading();
-                            view.clearEdit();
-                        }
-                    }
+            @Override
+            public void onTimeOut() {
+                if (view != null) {
+                    view.cancelLoading();
+                    view.showMessage(R.string.msg_time_out);
+                }
+            }
 
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+            @Override
+            public void onBleNotAvailable() {
+                if (view != null) {
+                    view.cancelLoading();
+                    view.showMessage(R.string.msg_ble_not_enable);
+                }
+            }
+
+            @Override
+            public void onDeviceDisconnected() {
+                if (view != null) {
+                    view.cancelLoading();
+                    view.showMessage(R.string.msg_device_offline);
+                }
+            }
+
+            @Override
+            public void onDeviceNotAvailable() {
+                if (view != null) {
+                    view.cancelLoading();
+                    view.showMessage(R.string.msg_device_not_available);
+                }
+            }
+        });
     }
 
     @Override

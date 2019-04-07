@@ -9,7 +9,7 @@ import com.viseeointernational.battmon.R;
 public class VoltageDialog extends AppCompatDialog {
 
     public VoltageDialog(Context context) {
-        super(context, R.style.DialogBase);
+        super(context, R.style.DialogTeach);
     }
 
     @Override

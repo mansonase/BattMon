@@ -8,8 +8,8 @@ android {
         applicationId "com.viseeointernational.battmon"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0.2"
+        versionCode 3
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -57,6 +57,7 @@ dependencies {
 
     // app
     implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
 
     // dagger2
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
@@ -91,22 +92,16 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit2Version"
 
     // 统计图
-    implementation "com.github.PhilJay:MPAndroidChart:$rootProject.MPAndroidChartVersion"
-
-    // pdf显示
-//    implementation "com.github.barteksc:android-pdf-viewer:$rootProject.pdfViewerVersion"
+    implementation "com.github.PhilJay:MPAndroidChart:v3.0.3"
 
     // picasso
-    implementation "com.squareup.picasso:picasso:$rootProject.picassoVersion"
+    implementation "com.squareup.picasso:picasso:2.5.2"
 
     // eventbus
-    implementation "org.greenrobot:eventbus:$rootProject.eventbusVersion"
+    implementation "org.greenrobot:eventbus:3.1.1"
 
     // circleimageview
-    implementation "de.hdodenhof:circleimageview:$rootProject.circleimageviewVersion"
-
-    // design
-    implementation "com.android.support:design:$rootProject.supportDesignVersion"
+    implementation "de.hdodenhof:circleimageview:2.1.0"
 
     // banner
     implementation "com.youth.banner:banner:1.4.10"

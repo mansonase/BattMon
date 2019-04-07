@@ -96,11 +96,11 @@ public class ListFragment extends BaseFragment implements ListFragmentContract.V
             }
 
             @Override
-            public void onDelete(ListAdapter adapter, Device device) {
+            public void onDelete(ListAdapter adapter, final Device device) {
                 new DeleteDialog(getContext(), new DeleteDialog.Callback() {
                     @Override
                     public void onDelete(DeleteDialog dialog) {
-                        presenter.delete();
+                        presenter.delete(device);
                     }
                 }).show("Delete " + device.name);
             }

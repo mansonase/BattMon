@@ -57,7 +57,7 @@ public class HistoryDataSet {
         Voltage voltage = new Voltage(address);
         voltage.time = timeCursor;
         float f = ValueUtil.getRealVoltage(b1, b2, calH, calL);
-        f = MathUtil.formatDouble2(f);
+        f = MathUtil.formatFloat2(f);
         voltage.value = f;
 
         if (voltage.value <= abnormalIdle) {

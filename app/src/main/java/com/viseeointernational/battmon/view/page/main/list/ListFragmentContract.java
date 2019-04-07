@@ -41,7 +41,7 @@ public interface ListFragmentContract {
 
         void setName(String s);
 
-        void delete();
+        void delete(@NonNull Device device);
 
         void searchDevice(@NonNull String input);
     }

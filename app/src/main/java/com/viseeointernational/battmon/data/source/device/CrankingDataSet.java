@@ -29,7 +29,7 @@ public class CrankingDataSet {
 
     public void putValue(byte b1, byte b2) {
         float f = ValueUtil.getRealVoltage(b1, b2, calH, calL);
-        f = MathUtil.formatDouble2(f);
+        f = MathUtil.formatFloat2(f);
         receivedData.add(f);
     }
 

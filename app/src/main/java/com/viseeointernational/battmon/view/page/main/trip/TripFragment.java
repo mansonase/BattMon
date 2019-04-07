@@ -124,13 +124,13 @@ public class TripFragment extends BaseFragment implements TripFragmentContract.V
     }
 
     @Override
-    public void showVoltageGraph(String title, List<Entry> list, int position) {
-        new ChartDialog(getActivity()).show(title, list, position);
+    public void showVoltageGraph(int icon, String title, List<Entry> list, int position) {
+        new ChartDialog(getActivity()).show(icon, title, list, position);
     }
 
     @Override
-    public void showCrankingGraph(String title, List<Entry> list, int position) {
-        new ChartDialog(getActivity()).show(title, list, position);
+    public void showCrankingGraph(int icon, String title, List<Entry> list, int position) {
+        new ChartDialog(getActivity()).show(icon, title, list, position);
     }
 
     @OnClick({R.id.teach, R.id.calendar})

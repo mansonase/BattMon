@@ -80,9 +80,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:visibility="gone"
             android:layout_centerVertical="true"
-            android:src="@mipmap/ic_enter_down" />
+            android:src="@mipmap/ic_enter_down"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -95,6 +95,7 @@
         android:id="@+id/detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/transparency30"
         android:orientation="vertical">
 
         <LinearLayout
@@ -113,13 +114,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_marginStart="20dp">
 
                 <com.viseeointernational.battmon.view.custom.FlashView
                     android:id="@+id/flash_voltage"
-                    android:layout_width="200dp"
-                    android:layout_height="30dp"
+                    android:layout_width="170dp"
+                    android:layout_height="35dp"
                     android:layout_centerHorizontal="true"
                     app:breathe="false"
                     app:flashColor="@android:color/transparent" />
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="--"
-                    android:textColor="@color/theme"
+                    android:textColor="@android:color/white"
                     android:textSize="14dp" />
 
             </RelativeLayout>
@@ -169,13 +169,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_marginStart="20dp">
 
                 <com.viseeointernational.battmon.view.custom.FlashView
                     android:id="@+id/flash_cranking"
-                    android:layout_width="200dp"
-                    android:layout_height="30dp"
+                    android:layout_width="170dp"
+                    android:layout_height="35dp"
                     android:layout_centerHorizontal="true"
                     app:breathe="false"
                     app:flashColor="@android:color/transparent" />
@@ -186,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="--"
-                    android:textColor="@color/theme"
+                    android:textColor="@android:color/white"
                     android:textSize="14dp" />
 
             </RelativeLayout>
@@ -225,13 +224,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_marginStart="20dp">
 
                 <com.viseeointernational.battmon.view.custom.FlashView
                     android:id="@+id/flash_charging"
-                    android:layout_width="200dp"
-                    android:layout_height="30dp"
+                    android:layout_width="170dp"
+                    android:layout_height="35dp"
                     android:layout_centerHorizontal="true"
                     app:breathe="false"
                     app:flashColor="@android:color/transparent" />
@@ -242,7 +240,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="--"
-                    android:textColor="@color/theme"
+                    android:textColor="@android:color/white"
                     android:textSize="14dp" />
 
             </RelativeLayout>
@@ -250,5 +248,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/white" />
 
 </LinearLayout>
