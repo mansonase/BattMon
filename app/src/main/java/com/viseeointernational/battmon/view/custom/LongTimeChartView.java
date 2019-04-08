@@ -46,11 +46,11 @@ public class LongTimeChartView extends LineChart {
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisLineColor(Color.WHITE);
-        xAxis.setAxisLineWidth(2);
+        xAxis.setAxisLineWidth(1);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setTextSize(12);
         xAxis.setDrawGridLines(false);
-        xAxis.setLabelCount(7, false);
+        xAxis.setLabelCount(6, false);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -67,13 +67,16 @@ public class LongTimeChartView extends LineChart {
         });
 
         YAxis yAxis = getAxisLeft();
-        yAxis.setEnabled(false);
+        yAxis.setAxisLineColor(Color.TRANSPARENT);
+        yAxis.setTextColor(Color.TRANSPARENT);
+        yAxis.setDrawGridLines(false);
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
         setDoubleTapToZoomEnabled(false);
         setPinchZoom(false);
-        setVisibleXRange(30, 30);
+        setScaleXEnabled(true);
+        setScaleYEnabled(false);
     }
 
     private List<Entry> list = new ArrayList<>();
@@ -81,22 +84,25 @@ public class LongTimeChartView extends LineChart {
     public void setData(List<Entry> list, int position, float red, float yellow, float blue) {
         getAxisLeft().removeAllLimitLines();
 
-        LimitLine limitLine = new LimitLine(red, String.valueOf(red));
-        limitLine.setLineWidth(2);
+        LimitLine limitLine = new LimitLine(red, String.valueOf(red) + "v");
+        limitLine.setLineWidth(1);
+        limitLine.setTextColor(Color.WHITE);
         limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
         limitLine.setTextSize(12);
         limitLine.setLineColor(getResources().getColor(R.color.stateRed));
         getAxisLeft().addLimitLine(limitLine);
 
-        limitLine = new LimitLine(yellow, String.valueOf(yellow));
-        limitLine.setLineWidth(2);
+        limitLine = new LimitLine(yellow, String.valueOf(yellow) + "v");
+        limitLine.setLineWidth(1);
+        limitLine.setTextColor(Color.WHITE);
         limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
         limitLine.setTextSize(12);
         limitLine.setLineColor(getResources().getColor(R.color.stateYellow));
         getAxisLeft().addLimitLine(limitLine);
 
-        limitLine = new LimitLine(blue, String.valueOf(blue));
-        limitLine.setLineWidth(2);
+        limitLine = new LimitLine(blue, String.valueOf(blue) + "v");
+        limitLine.setLineWidth(1);
+        limitLine.setTextColor(Color.WHITE);
         limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
         limitLine.setTextSize(12);
         limitLine.setLineColor(getResources().getColor(R.color.theme));
@@ -116,7 +122,7 @@ public class LongTimeChartView extends LineChart {
             lineDataSet.setColor(Color.WHITE);
             lineDataSet.setDrawCircleHole(false);
             lineDataSet.setDrawCircles(false);
-            lineDataSet.setLineWidth(4);
+            lineDataSet.setLineWidth(2);
             LineData lineData = new LineData(lineDataSet);
             lineData.setDrawValues(false);
             setData(lineData);
@@ -124,5 +130,6 @@ public class LongTimeChartView extends LineChart {
         if (position != -1) {
             zoom(1, 1, position, 1, YAxis.AxisDependency.LEFT);
         }
+        setVisibleXRange(180, 180);
     }
 }

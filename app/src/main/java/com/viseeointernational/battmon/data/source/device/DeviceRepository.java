@@ -1172,11 +1172,10 @@ public class DeviceRepository implements DeviceSource {
                                 }
                             }
                             float abnormalCranking = ValueUtil.getRealVoltage(device.crankLowH, device.crankLowL, device.calH, device.calL);
-                            float crankingStart = ValueUtil.getRealVoltage(device.triggerH, device.triggerL, device.calH, device.calL);
-                            float middle = (crankingStart + abnormalCranking) / 2;
+                            float yellow = abnormalCranking + 0.5f;
                             if (cranking.minValue <= abnormalCranking) {
                                 cranking.state = StateType.CRANKING_BAD;
-                            } else if (abnormalCranking < cranking.minValue && cranking.minValue < middle) {
+                            } else if (abnormalCranking < cranking.minValue && cranking.minValue < yellow) {
                                 cranking.state = StateType.CRANKING_LOW;
                             } else {
                                 cranking.state = StateType.CRANKING_GOOD;

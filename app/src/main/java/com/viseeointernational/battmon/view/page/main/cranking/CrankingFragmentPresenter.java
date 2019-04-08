@@ -82,8 +82,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
             return;
         }
         Device device = deviceSource.getDevice(address);
-        if (device.cranking != null) {
-            showCranking(device.cranking);
+        if (device != null && device.cranking != null) {
             float crankingStart = ValueUtil.getRealVoltage(device.triggerH, device.triggerL, device.calH, device.calL);
             crankingStart = MathUtil.formatFloat1(crankingStart);
             abnormalCranking = ValueUtil.getRealVoltage(device.crankLowH, device.crankLowL, device.calH, device.calL);
@@ -93,6 +92,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
             if (view != null) {
                 view.setThresholdvalue(start, abnormalCranking, yellow, crankingStart);
             }
+            showCranking(device.cranking);
             getChart(device.cranking);
             getLongTimeChart(type);
         }
@@ -100,7 +100,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
 
     private void showCranking(Cranking cranking) {
         if (view != null) {
-            view.showDate(TimeUtil.getFormatTime(cranking.startTime, "yyyy/MM/dd  HH:mm:ss"));
+            view.showDate(TimeUtil.getNormalDateEx(cranking.startTime));
             view.showValue(cranking.minValue + "v");
             view.showAnimation(cranking.maxValue, cranking.minValue);
             switch (cranking.state) {
@@ -246,43 +246,49 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
         if (TextUtils.isEmpty(address)) {
             return;
         }
-        final long interval = 10L * 24 * 60 * 60 * 1000;
+        final long interval = 24L * 60 * 60 * 1000;
         final Calendar calendar = Calendar.getInstance();
-        long now = calendar.getTimeInMillis();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, day + 1);
+        long to = calendar.getTimeInMillis();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         switch (type) {
             case LongTimeChartType.M_6:
             default:
-                calendar.set(Calendar.MONTH, -6);
+                calendar.set(Calendar.MONTH, month - 6);
                 break;
             case LongTimeChartType.Y_1:
-                calendar.set(Calendar.MONTH, -18);
+                calendar.set(Calendar.MONTH, month - 18);
                 break;
             case LongTimeChartType.Y_3:
-                calendar.set(Calendar.MONTH, -30);
+                calendar.set(Calendar.MONTH, month - 30);
                 break;
         }
         final long from = calendar.getTimeInMillis();
-        final int size = (int) ((now - from) / interval) + 1;
+        final int size = (int) ((to - from) / interval);
         Observable.just(1)
                 .map(new Function<Integer, List<Entry>>() {
                     @Override
                     public List<Entry> apply(Integer integer) throws Exception {
-                        List<Entry> data = new ArrayList<>();
-                        for (int i = 0; i < size; i++) {
+                        List<Entry> ret = new ArrayList<>();
+                        for (int i = size - 1; i >= 0; i--) {
                             float value = deviceSource.getAvgCranking(address, from + i * interval, from + (i + 1) * interval);
-                            Calendar calendar1 = Calendar.getInstance();
-                            calendar1.setTimeInMillis(from + i * interval);
+                            calendar.setTimeInMillis(from + i * interval);
                             int month = calendar.get(Calendar.MONTH);
-                            String xAxis = TimeUtil.getFormatTime(from + i * interval, TimeUtil.getEnglishMonthAbbr(month));
+                            String xAxis = TimeUtil.getEnglishMonthAbbr(month);
+                            if (value == 0 && ret.size() > 0) {
+                                value = ret.get(0).getY();
+                            }
                             Entry entry = new Entry(i, value, xAxis);
-                            data.add(entry);
+                            ret.add(0, entry);
                         }
-                        return data;
+                        return ret;
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -299,7 +305,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
                     public void onNext(List<Entry> entries) {
                         if (view != null) {
                             view.cancelLoading();
-                            view.showLongTimeChart(entries, -1, start, yellow, abnormalCranking);
+                            view.showLongTimeChart(entries, size, start, abnormalCranking, yellow);
                         }
                     }
 

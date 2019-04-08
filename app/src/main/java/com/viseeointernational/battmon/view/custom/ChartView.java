@@ -45,7 +45,7 @@ public class ChartView extends LineChart {
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisLineColor(Color.WHITE);
-        xAxis.setAxisLineWidth(2);
+        xAxis.setAxisLineWidth(1);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setTextSize(12);
         xAxis.setDrawGridLines(false);
@@ -69,7 +69,7 @@ public class ChartView extends LineChart {
         yAxis.setAxisLineColor(Color.TRANSPARENT);
         yAxis.setTextColor(Color.WHITE);
         yAxis.setTextSize(12);
-        yAxis.setAxisLineWidth(2);
+        yAxis.setAxisLineWidth(1);
         yAxis.setDrawGridLines(true);
         yAxis.setLabelCount(6, false);
         yAxis.setValueFormatter(new IAxisValueFormatter() {
