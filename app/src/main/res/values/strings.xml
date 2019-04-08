@@ -17,7 +17,7 @@
 
     <string name="channel_ble_service">BLE service</string>
 
-    <string name="waiting">Waiting&#8230;&#8230;&#8230;</string>
+    <string name="waiting">Waiting&#8230;</string>
 
     <string name="device_all">All</string>
     <string name="voltage_test">Voltage Test</string>
@@ -26,7 +26,7 @@
     <string name="trip">Trip</string>
     <string name="setup">Setup</string>
 
-    <string name="running">Running&#8230;&#8230;&#8230;</string>
+    <string name="running">Running&#8230;</string>
 
     <string name="how_to_use">How to use</string>
     <string name="get_started">Get Started</string>

@@ -16,6 +16,7 @@ public class Cranking {
     public String address;
     public long startTime;// 发生时间
     public float minValue = Float.MAX_VALUE;// value中的最小值
+    public float maxValue = 0;
     public int state;
 
     public Cranking(@NonNull String address) {

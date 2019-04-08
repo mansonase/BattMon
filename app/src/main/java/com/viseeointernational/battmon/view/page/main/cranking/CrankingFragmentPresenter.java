@@ -9,7 +9,9 @@ import com.viseeointernational.battmon.data.constant.StateType;
 import com.viseeointernational.battmon.data.entity.Cranking;
 import com.viseeointernational.battmon.data.entity.Device;
 import com.viseeointernational.battmon.data.source.device.DeviceSource;
+import com.viseeointernational.battmon.util.MathUtil;
 import com.viseeointernational.battmon.util.TimeUtil;
+import com.viseeointernational.battmon.util.ValueUtil;
 import com.viseeointernational.battmon.view.page.main.LongTimeChartType;
 
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
     private int year;
 
     private int type;
+    private float start;
+    private float abnormalCranking;
+    private float yellow;
 
     @Inject
     @Nullable
@@ -70,12 +75,26 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
                 }
             }
         });
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        showYear();
         if (TextUtils.isEmpty(address)) {
             return;
         }
         Device device = deviceSource.getDevice(address);
         if (device.cranking != null) {
             showCranking(device.cranking);
+            float crankingStart = ValueUtil.getRealVoltage(device.triggerH, device.triggerL, device.calH, device.calL);
+            crankingStart = MathUtil.formatFloat1(crankingStart);
+            abnormalCranking = ValueUtil.getRealVoltage(device.crankLowH, device.crankLowL, device.calH, device.calL);
+            abnormalCranking = MathUtil.formatFloat1(abnormalCranking);
+            yellow = abnormalCranking + 0.5f;
+            start = abnormalCranking - 1;
+            if (view != null) {
+                view.setThresholdvalue(start, abnormalCranking, yellow, crankingStart);
+            }
+            getChart(device.cranking);
+            getLongTimeChart(type);
         }
     }
 
@@ -83,7 +102,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
         if (view != null) {
             view.showDate(TimeUtil.getFormatTime(cranking.startTime, "yyyy/MM/dd  HH:mm:ss"));
             view.showValue(cranking.minValue + "v");
-            view.showAnimation(cranking.getFloatValues());
+            view.showAnimation(cranking.maxValue, cranking.minValue);
             switch (cranking.state) {
                 case StateType.CRANKING_BAD:
                     view.showState("Bad");
@@ -101,16 +120,114 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
         }
     }
 
+    public void getChart(final Cranking cranking) {
+        Observable.just(1)
+                .map(new Function<Integer, List<Float>>() {
+                    @Override
+                    public List<Float> apply(Integer integer) throws Exception {
+                        return cranking.getFloatValues();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Float>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (view != null) {
+                            view.showLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(List<Float> floats) {
+                        makeCrankingChart(floats);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (view != null) {
+                            view.cancelLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private void makeCrankingChart(final List<Float> floats) {
+        Observable.just(1)
+                .map(new Function<Integer, List<Entry>>() {
+                    @Override
+                    public List<Entry> apply(Integer integer) throws Exception {
+                        List<Entry> ret = new ArrayList<>();
+                        List<Float> temp = new ArrayList<>();
+                        int index = 0;
+                        for (int i = 0; i < floats.size(); i++) {
+                            if (i % 5 == 0) {
+                                if (temp.size() != 0) {
+                                    float value = 0;
+                                    for (int j = 0; j < temp.size(); j++) {
+                                        value += temp.get(j);
+                                    }
+                                    value = value / temp.size();
+                                    value = MathUtil.formatFloat2(value);
+                                    float axis = (i / 5f - 1) * 0.1f;
+                                    axis = MathUtil.formatFloat2(axis);
+                                    Entry entry = new Entry(index, value, axis + "s");
+                                    ret.add(entry);
+                                    index++;
+                                }
+                                temp.clear();
+                            } else {
+                                temp.add(floats.get(i));
+                            }
+                        }
+
+                        return ret;
+                    }
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Entry>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(List<Entry> entries) {
+                        if (view != null) {
+                            view.cancelLoading();
+                            view.showChart(entries, -1);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (view != null) {
+                            view.cancelLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
     @Override
     public void previousYear() {
         year--;
         showYear();
+        getLongTimeChart(type);
     }
 
     @Override
     public void nextYear() {
         year++;
         showYear();
+        getLongTimeChart(type);
     }
 
     private void showYear() {
@@ -157,7 +274,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
                     public List<Entry> apply(Integer integer) throws Exception {
                         List<Entry> data = new ArrayList<>();
                         for (int i = 0; i < size; i++) {
-                            float value = deviceSource.getAvgVoltage(address, from + i * interval, from + (i + 1) * interval);
+                            float value = deviceSource.getAvgCranking(address, from + i * interval, from + (i + 1) * interval);
                             Calendar calendar1 = Calendar.getInstance();
                             calendar1.setTimeInMillis(from + i * interval);
                             int month = calendar.get(Calendar.MONTH);
@@ -182,7 +299,7 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
                     public void onNext(List<Entry> entries) {
                         if (view != null) {
                             view.cancelLoading();
-                            view.showLongTimeChart(entries, -1, start, abnormalIdle, yellow);
+                            view.showLongTimeChart(entries, -1, start, yellow, abnormalCranking);
                         }
                     }
 

@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.viseeointernational.battmon.App;
 import com.viseeointernational.battmon.R;
+import com.viseeointernational.battmon.util.StringUtil;
 import com.viseeointernational.battmon.view.notification.Notifications;
 import com.viseeointernational.battmon.view.page.main.MainActivity;
 

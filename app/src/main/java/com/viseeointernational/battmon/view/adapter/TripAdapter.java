@@ -77,27 +77,27 @@ public class TripAdapter extends BaseAdapter {
         long d = trip.endTime - trip.startTime;
         int hours = (int) (d / (60000L * 60));
         int minutes = (int) (d - hours * 60000L * 60) / 60000;
+        int seconds = (int) (d - hours * 60000L * 60 - minutes * 60000L) / 1000;
         String duration = "";
-        if (hours == 1) {
+        if (hours > 0) {
             duration = hours + "hour";
-        } else if (hours > 0) {
-            duration = hours + "hours";
         }
-        if (minutes == 1) {
+        if (minutes > 0) {
             duration += minutes + "min";
-        } else if (minutes > 0) {
-            duration += minutes + "mins";
+        }
+        if (seconds > 0) {
+            duration += seconds + "s";
         }
         holder.trip.setDuration(duration);
-        if(trip.voltage != null){
+        if (trip.voltage != null) {
             holder.trip.setStateVoltage(trip.voltage.state);
             holder.trip.setVoltageValue(trip.voltage.value + "v");
         }
-        if(trip.cranking != null){
+        if (trip.cranking != null) {
             holder.trip.setStateCranking(trip.cranking.state);
             holder.trip.setCrankingValue(trip.cranking.minValue + "v");
         }
-        if(trip.charging != null){
+        if (trip.charging != null) {
             holder.trip.setStateCharging(trip.charging.state);
         }
         holder.trip.setTag(position);

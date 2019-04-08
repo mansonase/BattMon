@@ -34,9 +34,7 @@ public interface DeviceSource {
 
     float getAvgVoltage(@NonNull String address, long from, long to);// 子线程
 
-    Cranking getLastCranking(@NonNull String address);// zi
-
-    List<Cranking> getCrankings(@NonNull String address, long from, long to);// zi
+    float getAvgCranking(@NonNull String address, long from, long to);// 子线程
 
     List<Trip> getTripsAndDetail(@NonNull String address, long from, long to);// zi
 
@@ -64,6 +62,13 @@ public interface DeviceSource {
     }
 
     void setConnectionChangeListener(@Nullable ConnectionChangeListener listener);
+
+    interface TripListener{
+
+        void onNewTrip(Trip trip);
+    }
+
+    void setTripListener(@Nullable TripListener listener);
 
     /**********************************************搜索***************************************************/
 
@@ -94,8 +99,6 @@ public interface DeviceSource {
     void connect(@NonNull String address, @NonNull ConnectionCallback callback);
 
     /**********************************************设置***************************************************/
-
-    void delete(@NonNull String address);
 
     void saveName(@NonNull String address, @NonNull String name);// zhu
 

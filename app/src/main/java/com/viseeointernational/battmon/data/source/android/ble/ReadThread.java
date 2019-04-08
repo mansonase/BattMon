@@ -1,8 +1,13 @@
 package com.viseeointernational.battmon.data.source.android.ble;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.viseeointernational.battmon.util.StringUtil;
 
 public class ReadThread extends Thread {
+
+    private static final String TAG = ReadThread.class.getSimpleName();
 
     private ReadData readData = new ReadData();
 
@@ -42,7 +47,7 @@ public class ReadThread extends Thread {
                         }
                     } else {
                         if (validData == null) {
-                            validData = new byte[b + 3];// 第三个字节是长度
+                            validData = new byte[(b & 0xff) + 3];// 第三个字节是长度
                             validData[0] = (byte) 0xff;
                             validData[1] = (byte) 0xaa;
                             validData[2] = b;

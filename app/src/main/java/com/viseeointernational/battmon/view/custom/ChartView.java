@@ -112,7 +112,7 @@ public class ChartView extends LineChart {
         if (position != -1) {
             zoom(1, 1, position, 1, YAxis.AxisDependency.LEFT);
         }
-        setVisibleXRange(30, 30);
+        setVisibleXRange(5, 30);
     }
 
 }

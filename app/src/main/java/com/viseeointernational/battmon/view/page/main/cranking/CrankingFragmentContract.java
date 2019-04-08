@@ -12,7 +12,7 @@ public interface CrankingFragmentContract {
 
         void showDate(String s);
 
-        void showAnimation(List<Float> data);
+        void showAnimation(float max, float min);
 
         void showValue(String s);
 

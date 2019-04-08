@@ -6,6 +6,7 @@ import android.util.Log;
 import com.viseeointernational.battmon.R;
 import com.viseeointernational.battmon.data.entity.Device;
 import com.viseeointernational.battmon.data.source.device.DeviceSource;
+import com.viseeointernational.battmon.view.notification.Notifications;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,13 +21,15 @@ public class ConnectActivityPresenter implements ConnectActivityContract.Present
     private ConnectActivityContract.View view;
 
     private DeviceSource deviceSource;
+    private Notifications notifications;
 
     private Map<String, Device> foundDevices = new LinkedHashMap<>();
     private String address;
 
     @Inject
-    public ConnectActivityPresenter(DeviceSource deviceSource) {
+    public ConnectActivityPresenter(DeviceSource deviceSource, Notifications notifications) {
         this.deviceSource = deviceSource;
+        this.notifications = notifications;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class ConnectActivityPresenter implements ConnectActivityContract.Present
 
     @Override
     public void dropView() {
+        deviceSource.stopSearch();
         view = null;
     }
 
@@ -44,7 +48,7 @@ public class ConnectActivityPresenter implements ConnectActivityContract.Present
     public void search() {
         foundDevices.clear();
         if (view != null) {
-            view.showDevices(new ArrayList<Device>(foundDevices.values()));
+            view.showDevices(new ArrayList<>(foundDevices.values()));
         }
         deviceSource.search(20, new DeviceSource.SearchCallback() {
             @Override
@@ -69,7 +73,7 @@ public class ConnectActivityPresenter implements ConnectActivityContract.Present
             public void onFinish() {
                 if (view != null) {
                     if (foundDevices.size() == 0) {
-//                        notifications.sendNoDeviceFoundNotification();
+                        notifications.noDeviceFound();
                     }
                 }
             }

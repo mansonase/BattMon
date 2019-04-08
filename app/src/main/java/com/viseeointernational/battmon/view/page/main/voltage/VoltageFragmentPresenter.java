@@ -9,6 +9,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.viseeointernational.battmon.R;
 import com.viseeointernational.battmon.data.constant.StateType;
 import com.viseeointernational.battmon.data.entity.Device;
+import com.viseeointernational.battmon.data.entity.Trip;
 import com.viseeointernational.battmon.data.entity.Voltage;
 import com.viseeointernational.battmon.data.source.device.DeviceSource;
 import com.viseeointernational.battmon.util.MathUtil;
@@ -72,16 +73,27 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
 
     @Override
     public void dropView() {
+        deviceSource.setTripListener(null);
         deviceSource.setVoltageListener(null);
         view = null;
     }
 
     private void init() {
+        deviceSource.setTripListener(new DeviceSource.TripListener() {
+            @Override
+            public void onNewTrip(Trip trip) {
+                if (trip.address.equals(address)) {
+                    chartFrom = trip.startTime;
+                    chartTo = Calendar.getInstance().getTimeInMillis();
+                    getChart();
+                }
+            }
+        });
         deviceSource.setVoltageListener(new DeviceSource.VoltageListener() {
             @Override
             public void onValueReceived(Voltage voltage) {
                 if (voltage.address.equals(address)) {
-                    if (chartFrom <= voltage.time && voltage.time < chartTo) {
+                    if (chartFrom <= voltage.time) {
                         tempChartData.add(voltage);
                         makeVoltageChart(tempChartData, chartFrom, chartTo, -1);
                     }
@@ -153,7 +165,11 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
                         if (device.voltage != null) {
                             showVoltage(device.voltage);
                         }
-                        getChart();
+                        if (device.trip != null) {
+                            chartFrom = device.trip.startTime;
+                            chartTo = Calendar.getInstance().getTimeInMillis();
+                            getChart();
+                        }
                         getLongTimeChart(type);
                     }
 
@@ -203,13 +219,6 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
     private void getChart() {
         Calendar calendar = Calendar.getInstance();
         final long now = calendar.getTimeInMillis();
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        chartFrom = calendar.getTimeInMillis();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        calendar.set(Calendar.HOUR_OF_DAY, hour + 1);
-        chartTo = calendar.getTimeInMillis();
         Observable.just(1)
                 .map(new Function<Integer, List<Voltage>>() {
                     @Override
@@ -243,7 +252,6 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
     }
@@ -412,12 +420,14 @@ public class VoltageFragmentPresenter implements VoltageFragmentContract.Present
     public void previousYear() {
         year--;
         showYear();
+        getLongTimeChart(type);
     }
 
     @Override
     public void nextYear() {
         year++;
         showYear();
+        getLongTimeChart(type);
     }
 
     @Override

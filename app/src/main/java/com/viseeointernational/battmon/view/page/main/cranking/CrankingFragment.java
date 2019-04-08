@@ -3,9 +3,11 @@ package com.viseeointernational.battmon.view.page.main.cranking;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,6 +21,7 @@ import com.viseeointernational.battmon.view.custom.FlashView;
 import com.viseeointernational.battmon.view.custom.LongTimeChartView;
 import com.viseeointernational.battmon.view.custom.VoltageView;
 import com.viseeointernational.battmon.view.page.BaseFragment;
+import com.viseeointernational.battmon.view.page.main.LongTimeChartType;
 import com.viseeointernational.battmon.view.page.main.MainActivity;
 
 import java.util.List;
@@ -37,6 +40,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class CrankingFragment extends BaseFragment implements CrankingFragmentContract.View {
+
+    private static final String TAG = CrankingFragment.class.getSimpleName();
 
     @Inject
     CrankingFragmentContract.Presenter presenter;
@@ -109,8 +114,29 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        m6.setOnCheckedChangeListener(onCheckedChangeListener);
+        y1.setOnCheckedChangeListener(onCheckedChangeListener);
+        y3.setOnCheckedChangeListener(onCheckedChangeListener);
     }
+
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                switch (buttonView.getId()) {
+                    case R.id.m_6:
+                        presenter.setLongTimeChartType(LongTimeChartType.M_6);
+                        break;
+                    case R.id.y_1:
+                        presenter.setLongTimeChartType(LongTimeChartType.Y_1);
+                        break;
+                    case R.id.y_3:
+                        presenter.setLongTimeChartType(LongTimeChartType.Y_3);
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     public void onResume() {
@@ -120,7 +146,6 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
 
     @Override
     public void onPause() {
-        stopAnimation();
         presenter.dropView();
         super.onPause();
     }
@@ -130,35 +155,10 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
         date.setText(s);
     }
 
-    private Disposable disposable;
-
     @Override
-    public void showAnimation(final List<Float> data) {
-        stopAnimation();
-        disposable = Observable.interval(0, 110, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-
-                    int index;
-
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        if (index < data.size()) {
-                            voltage.setVoltage(data.get(index));
-                            index++;
-                        } else {
-                            stopAnimation();
-                        }
-                    }
-                });
-    }
-
-    private void stopAnimation() {
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-            disposable = null;
-        }
+    public void showAnimation(float max, float min) {
+        voltage.setVoltage(max, 0);
+        voltage.setVoltage(min, 2000);
     }
 
     @Override
@@ -180,6 +180,9 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
     @Override
     public void setThresholdvalue(float start, float abnormalCranking, float yellow, float crankingStart) {
         voltage.setLevels(start, abnormalCranking, yellow, crankingStart);
+        this.abnormalCranking.setText(abnormalCranking + "v");
+        yellowCranking.setText(yellow + "v");
+        this.crankingStart.setText(crankingStart + "v");
     }
 
     @Override

@@ -138,6 +138,9 @@ public class DeviceRepository implements DeviceSource {
                 Device device = devices.get(i);
                 device.voltage = voltageDao.getLashVoltage(device.address);
                 device.cranking = crankingDao.getLashCranking(device.address);
+                if (device.cranking != null) {
+                    device.cranking.crankingValues = crankingValueDao.getCrankingValues(device.address, device.cranking.startTime);
+                }
                 pairedDevices.put(device.address, device);
             }
         }
@@ -209,23 +212,13 @@ public class DeviceRepository implements DeviceSource {
     }
 
     @Override
+    public float getAvgCranking(@NonNull String address, long from, long to) {
+        return crankingDao.getAvgCranking(address, from, to);
+    }
+
+    @Override
     public List<Voltage> getAbnormalChargings(@NonNull String address, long from, long to) {
         return voltageDao.getVoltagesByState(address, from, to, StateType.OVER_CHARGING);
-    }
-
-    @Override
-    public Cranking getLastCranking(@NonNull String address) {
-        return crankingDao.getLashCranking(address);
-    }
-
-    @Override
-    public List<Cranking> getCrankings(@NonNull String address, long from, long to) {
-        List<Cranking> crankings = crankingDao.getCrankings(address, from, to);
-        for (int i = 0; i < crankings.size(); i++) {
-            Cranking cranking = crankings.get(i);
-            cranking.crankingValues = crankingValueDao.getCrankingValues(address, cranking.startTime);
-        }
-        return crankings;
     }
 
     @Override
@@ -242,12 +235,11 @@ public class DeviceRepository implements DeviceSource {
             trip.charging = voltageDao.getLashVoltageByState(address, trip.startTime, trip.endTime,
                     StateType.CHARGING, StateType.OVER_CHARGING);
         }
-        if (pairedDevices.containsKey(address)) {
-            Device device = pairedDevices.get(address);
-            if (device != null && device.trip != null) {
-                if (from <= device.trip.startTime) {
-                    trips.add(device.trip);
-                }
+        Device device = pairedDevices.get(address);
+        if (device != null && device.trip != null) {
+            if (from <= device.trip.startTime) {
+                device.trip.endTime = Calendar.getInstance().getTimeInMillis();
+                trips.add(device.trip);
             }
         }
         return trips;
@@ -256,6 +248,21 @@ public class DeviceRepository implements DeviceSource {
     @Override
     public List<Trip> getTrips(@NonNull String address, long from, long to) {
         return tripDao.getTrips(address, from, to);
+    }
+
+    /**********************************************监听trip***************************************************/
+
+    private TripListener tripListener;
+
+    private void handleTripChangeListen(Trip trip) {
+        if (tripListener != null) {
+            tripListener.onNewTrip(trip);
+        }
+    }
+
+    @Override
+    public void setTripListener(@Nullable TripListener listener) {
+        tripListener = listener;
     }
 
     /**********************************************监听voltage***************************************************/
@@ -367,12 +374,6 @@ public class DeviceRepository implements DeviceSource {
         connectCallbackAddress = address;
         connectionCallback = callback;
         bleService.connect(address, true);
-    }
-
-    @Override
-    public void delete(@NonNull String address) {
-        bleService.write(address, new byte[]{(byte) 0xa9});// 取消配对
-        deviceDao.deleteByAddress(address);
     }
 
     @Override
@@ -767,7 +768,7 @@ public class DeviceRepository implements DeviceSource {
             final Device device = pairedDevices.get(address);
             if (device != null) {
                 if (device.connectionState == ConnectionType.CONNECTED) {
-                    // todo 播通知
+                    notifications.lostConnection(device.address, device.name, Calendar.getInstance().getTimeInMillis());
                 }
                 device.connectionState = ConnectionType.DISCONNECTED;
                 if (device.trip == null) {
@@ -833,8 +834,10 @@ public class DeviceRepository implements DeviceSource {
         if (pairedDevices.containsKey(address)) {// 自动重连情况
             Device device = pairedDevices.get(address);
             if (device != null) {
+                notifications.connected(device.address, device.name, Calendar.getInstance().getTimeInMillis());
                 device.trip = new Trip(address);
                 device.trip.startTime = Calendar.getInstance().getTimeInMillis();
+                handleTripChangeListen(device.trip);
                 device.isReady = false;
                 device.connectionState = ConnectionType.CONNECTED;
                 bleService.write(address, new byte[]{(byte) 0xa0});// 发A0拿历史数据
@@ -862,6 +865,7 @@ public class DeviceRepository implements DeviceSource {
                         device.connectionState = ConnectionType.CONNECTED;
                         device.trip = new Trip(address);
                         device.trip.startTime = Calendar.getInstance().getTimeInMillis();
+                        handleTripChangeListen(device.trip);
                         device.isReady = true;
                         deviceDao.insert(device);
                         bleService.write(address, new byte[]{(byte) 0xf0, device.calH, device.calL});
@@ -881,6 +885,7 @@ public class DeviceRepository implements DeviceSource {
                     @Override
                     public void onNext(Device device) {
                         handleConnectionConnected(device.address);
+                        notifications.connected(device.address, device.name, Calendar.getInstance().getTimeInMillis());
                     }
 
                     @Override
@@ -916,13 +921,9 @@ public class DeviceRepository implements DeviceSource {
             return;
         }
         final long now = Calendar.getInstance().getTimeInMillis();
-        final long from = now - 60000;
         Observable.create(new ObservableOnSubscribe<Voltage>() {
             @Override
             public void subscribe(ObservableEmitter<Voltage> emitter) throws Exception {
-                List<Voltage> voltages = voltageDao.getVoltagesByIndex(address, data[6], data[7], data[12], from, now);
-                voltageDao.delete(voltages);
-
                 Voltage voltage = new Voltage(address);
                 voltage.time = now;
                 float value = ValueUtil.getRealVoltage(data[4], data[5], data[9], data[10]);
@@ -1165,6 +1166,9 @@ public class DeviceRepository implements DeviceSource {
                                 cranking.crankingValues.add(value);
                                 if (f < cranking.minValue) {
                                     cranking.minValue = f;
+                                }
+                                if (f > cranking.maxValue) {
+                                    cranking.maxValue = f;
                                 }
                             }
                             float abnormalCranking = ValueUtil.getRealVoltage(device.crankLowH, device.crankLowL, device.calH, device.calL);

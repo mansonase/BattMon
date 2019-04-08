@@ -27,4 +27,7 @@ public interface CrankingDao {
 
     @Query("SELECT * FROM Cranking WHERE address = :address AND (startTime BETWEEN :from AND :to)")
     List<Cranking> getCrankings(@NonNull String address, long from, long to);
+
+    @Query("SELECT AVG(minValue) FROM Cranking WHERE address = :address AND (startTime BETWEEN :from AND :to)")
+    float getAvgCranking(@NonNull String address, long from, long to);
 }

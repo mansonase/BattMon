@@ -76,7 +76,7 @@ public class VoltageView extends RelativeLayout {
         redStep = RED / (level1 - level0);
     }
 
-    public void setVoltage(float voltage) {
+    public void setVoltage(float voltage, long duration) {
         float degrees;
         if (level3 < voltage) {
             degrees = BEFORE_RED + RED + YELLOW + BLUE + AFTER_BLUE;
@@ -89,15 +89,14 @@ public class VoltageView extends RelativeLayout {
         } else {
             degrees = 0;
         }
-//        degrees -= 143;
-        doRotation(degrees);
+        doRotation(degrees, duration);
         lastDegrees = degrees;
     }
 
-    private void doRotation(float degrees) {
+    private void doRotation(float degrees, long duration) {
         RotateAnimation animation = new RotateAnimation(lastDegrees, degrees,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(100);
+        animation.setDuration(duration);
         animation.setFillAfter(true);
         pointer.startAnimation(animation);
     }
