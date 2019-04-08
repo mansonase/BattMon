@@ -3,7 +3,6 @@ package com.viseeointernational.battmon.view.page.main.cranking;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.viseeointernational.battmon.view.page.main.LongTimeChartType;
 import com.viseeointernational.battmon.view.page.main.MainActivity;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -33,11 +31,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class CrankingFragment extends BaseFragment implements CrankingFragmentContract.View {
 
@@ -156,7 +149,11 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
     }
 
     @Override
-    public void showAnimation(float max, float min) {
+    public void showAnimation(float max, float min, float start, float abnormalCranking, float yellow, float crankingStart) {
+        voltage.setLevels(start, abnormalCranking, yellow, crankingStart);
+        this.abnormalCranking.setText(abnormalCranking + "v");
+        yellowCranking.setText(yellow + "v");
+        this.crankingStart.setText(crankingStart + "v");
         voltage.setVoltage(max, 0);
         voltage.setVoltage(min, 2000);
     }
@@ -175,14 +172,6 @@ public class CrankingFragment extends BaseFragment implements CrankingFragmentCo
     public void showColor(int color) {
         flash.setColor(color);
         state.setTextColor(color);
-    }
-
-    @Override
-    public void setThresholdvalue(float start, float abnormalCranking, float yellow, float crankingStart) {
-        voltage.setLevels(start, abnormalCranking, yellow, crankingStart);
-        this.abnormalCranking.setText(abnormalCranking + "v");
-        yellowCranking.setText(yellow + "v");
-        this.crankingStart.setText(crankingStart + "v");
     }
 
     @Override

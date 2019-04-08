@@ -40,9 +40,11 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
     private int year;
 
     private int type;
+
     private float start;
     private float abnormalCranking;
     private float yellow;
+    private float crankingStart;
 
     @Inject
     @Nullable
@@ -75,26 +77,29 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
                 }
             }
         });
-        Calendar calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        showYear();
+
+        if (year == 0) {
+            Calendar calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+        }
+        showYear(year);
+
         if (TextUtils.isEmpty(address)) {
             return;
         }
         Device device = deviceSource.getDevice(address);
-        if (device != null && device.cranking != null) {
-            float crankingStart = ValueUtil.getRealVoltage(device.triggerH, device.triggerL, device.calH, device.calL);
+        if (device != null) {
+            crankingStart = ValueUtil.getRealVoltage(device.triggerH, device.triggerL, device.calH, device.calL);
             crankingStart = MathUtil.formatFloat1(crankingStart);
             abnormalCranking = ValueUtil.getRealVoltage(device.crankLowH, device.crankLowL, device.calH, device.calL);
             abnormalCranking = MathUtil.formatFloat1(abnormalCranking);
             yellow = abnormalCranking + 0.5f;
             start = abnormalCranking - 1;
-            if (view != null) {
-                view.setThresholdvalue(start, abnormalCranking, yellow, crankingStart);
+            getLongTimeChart(type, year);
+            if (device.cranking != null) {
+                getChart(device.cranking);
+                showCranking(device.cranking);
             }
-            showCranking(device.cranking);
-            getChart(device.cranking);
-            getLongTimeChart(type);
         }
     }
 
@@ -102,19 +107,20 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
         if (view != null) {
             view.showDate(TimeUtil.getNormalDateEx(cranking.startTime));
             view.showValue(cranking.minValue + "v");
-            view.showAnimation(cranking.maxValue, cranking.minValue);
+            view.showAnimation(cranking.maxValue, cranking.minValue, start, abnormalCranking, yellow, crankingStart);
             switch (cranking.state) {
                 case StateType.CRANKING_BAD:
                     view.showState("Bad");
-                    view.showColor(context.getResources().getColor(R.color.stateRed));
+                    view.showColor(context.getColor(R.color.stateRed));
                     break;
                 case StateType.CRANKING_LOW:
-                    view.showColor(context.getResources().getColor(R.color.stateYellow));
                     view.showState("Low");
+                    view.showColor(context.getColor(R.color.stateYellow));
                     break;
                 case StateType.CRANKING_GOOD:
-                    view.showColor(context.getResources().getColor(R.color.theme));
+                default:
                     view.showState("Good");
+                    view.showColor(context.getColor(R.color.theme));
                     break;
             }
         }
@@ -219,18 +225,18 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
     @Override
     public void previousYear() {
         year--;
-        showYear();
-        getLongTimeChart(type);
+        showYear(year);
+        getLongTimeChart(type, year);
     }
 
     @Override
     public void nextYear() {
         year++;
-        showYear();
-        getLongTimeChart(type);
+        showYear(year);
+        getLongTimeChart(type, year);
     }
 
-    private void showYear() {
+    private void showYear(int year) {
         if (view != null) {
             view.showYear(year + "");
         }
@@ -239,10 +245,10 @@ public class CrankingFragmentPresenter implements CrankingFragmentContract.Prese
     @Override
     public void setLongTimeChartType(int type) {
         this.type = type;
-        getLongTimeChart(type);
+        getLongTimeChart(type, year);
     }
 
-    private void getLongTimeChart(int type) {
+    private void getLongTimeChart(int type, int year) {
         if (TextUtils.isEmpty(address)) {
             return;
         }

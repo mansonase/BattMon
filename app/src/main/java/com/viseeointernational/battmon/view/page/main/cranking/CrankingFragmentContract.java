@@ -12,15 +12,13 @@ public interface CrankingFragmentContract {
 
         void showDate(String s);
 
-        void showAnimation(float max, float min);
+        void showAnimation(float max, float min, float start, float abnormalCranking, float yellow, float crankingStart);
 
         void showValue(String s);
 
         void showState(String s);
 
         void showColor(int color);
-
-        void setThresholdvalue(float start, float abnormalCranking, float yellow, float crankingStart);
 
         void showChart(List<Entry> data, int position);
 

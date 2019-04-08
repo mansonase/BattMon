@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="visible"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -61,7 +61,8 @@
                 android:id="@+id/voltage"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_marginStart="40dp" />
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="-40dp" />
 
             <TextView
                 android:id="@+id/cranking_start"
